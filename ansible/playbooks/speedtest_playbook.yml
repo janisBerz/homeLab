@@ -3,6 +3,8 @@
   gather_facts: false
   tasks:
     - block:
+        - name: Ping the machine
+          ping:
         - name: Ensure speedtest-cli is installed
           apt:
             name: speedtest-cli
