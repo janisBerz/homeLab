@@ -5,8 +5,9 @@
     - block:
         - name: Ping the machine
           ping:
+  
         - name: Ensure speedtest-cli is installed
-          apt:
+          yum:
             name: speedtest-cli
             state: present
           become: true
