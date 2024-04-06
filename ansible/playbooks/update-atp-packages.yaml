@@ -1,0 +1,8 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: update atp packages
+      apt:
+        update: yes
+        update_cache: yes
