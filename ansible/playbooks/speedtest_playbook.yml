@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - block:
+        - name: Ensure speedtest-cli is installed
+          apt:
+            name: speedtest-cli
+            state: present
+          become: true
+
+        - name: Run speedtest
+          command: speedtest-cli --simple
+          register: speedtest_output
+
+        - name: Log speedtest results
+          copy:
+            content: "{{ speedtest_output.stdout }}"
+            dest: "/var/log/speedtest.log"
+          become: true
