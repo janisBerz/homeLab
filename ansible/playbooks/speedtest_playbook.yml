@@ -5,12 +5,17 @@
     - block:
         - name: Ping the machine
           ping:
-  
-        - name: Ensure speedtest-cli is installed
+
+        - name: Ensure pip is installed
           yum:
-            name: speedtest-cli
+            name: python-pip
             state: present
           become: true
+
+        - name: Ensure speedtest-cli is installed
+          pip:
+            name: speedtest-cli
+            state: present
 
         - name: Run speedtest
           command: speedtest-cli --simple
