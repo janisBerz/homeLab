@@ -3,6 +3,12 @@
   gather_facts: false
   tasks:
     - block:
+        - name: Update all packages
+          yum:
+            name: '*'
+            state: latest
+          become: true
+
         - name: Ping the machine
           ping:
 
