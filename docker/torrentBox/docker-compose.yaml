@@ -1,18 +1,18 @@
 services:
-  # nginx:
-  #   image: jc21/nginx-proxy-manager:latest
-  #   container_name: nginx
-  #   restart: always
-  #   networks:
-  #     - torrent-net
-  #     - nginx-net
-  #   ports:
-  #     - 80:80
-  #     - 81:81
-  #     - 443:443
-  #   volumes:
-  #     - nginx-vol:/data
-  #     - nginx-vol:/etc/letsencrypt
+  nginx:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx
+    restart: always
+    networks:
+      - torrent-net
+      - nginx-net
+    ports:
+      - 80:80
+      - 81:81
+      - 443:443
+    volumes:
+      - nginx-vol:/data
+      - nginx-vol:/etc/letsencrypt
   jackett:
     image: lscr.io/linuxserver/jackett:latest
     container_name: jackett
