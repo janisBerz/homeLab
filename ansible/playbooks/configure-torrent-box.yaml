@@ -51,11 +51,11 @@
 
     - name: Update docker-compose.yaml file
       replace:
-        path: "{{ playbook_dir }}/../../docker/torrentBox/docker-compose.yaml" # replace with your actual docker-compose file path
+        path: "/opt/stacks/torrentBox/docker-compose.yaml" # replace with your actual docker-compose file path
         regexp: 'PUID=1000'
         replace: 'PUID={{ uid.stdout }}'
       replace:
-        path: "{{ playbook_dir }}/../../docker/torrentBox/docker-compose.yaml" # replace with your actual docker-compose file path
+        path: "/opt/stacks/torrentBox/docker-compose.yaml" # replace with your actual docker-compose file path
         regexp: 'PGID=1000'
         replace: 'PGID={{ gid.stdout }}'
 
