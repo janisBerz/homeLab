@@ -12,12 +12,6 @@
         - name: Ping the machine
           ping:
 
-        - name: Ensure pip is installed
-          yum:
-            name: python-pip
-            state: present
-          become: true
-
         - name: Ensure python 3 is installed
           yum:
             name: python3
