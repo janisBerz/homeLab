@@ -31,9 +31,18 @@
       debug:
         msg: "{{ dir_structure.stdout }}"
 
+    - name: Change directory
+      command:
+        cmd: pwd
+        chdir: ../
+      register: result
+
+    - debug:
+        var: result.stdout
+
     - name: Copy Docker Compose file
       copy:
-        src: ../../../docker/torrentBox/docker-compose.yml
+        src: ../../docker/torrentBox/docker-compose.yml
         dest: /opt/stacks/torrentBox/docker-compose.yml
 
     - name: Run Docker Compose
