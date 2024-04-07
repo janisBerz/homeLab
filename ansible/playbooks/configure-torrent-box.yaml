@@ -7,6 +7,11 @@
         path: /opt/stacks/torrentBox
         state: directory
 
+    - name: Ensure torrentBox directory exists
+      file:
+        path: /media/torrentBox
+        state: directory
+
     - name: Copy Docker Compose file
       copy:
         src: "{{ playbook_dir }}/../../docker/torrentBox/"
