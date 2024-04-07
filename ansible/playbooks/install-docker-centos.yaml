@@ -1,0 +1,28 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Install required packages
+      yum:
+        name: "{{ packages }}"
+        state: present
+      vars:
+        packages:
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
+
+    - name: Add Docker repository
+      command:
+        cmd: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+    - name: Install Docker
+      yum:
+        name: docker-ce
+        state: present
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: true
