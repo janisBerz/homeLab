@@ -18,6 +18,10 @@
             state: present
           become: true
 
+        - name: Install Speedtest CLI repository
+          shell: curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.rpm.sh | sudo bash
+          become: true
+
         - name: Ensure speedtest-cli is installed
           pip:
             name: speedtest-cli
