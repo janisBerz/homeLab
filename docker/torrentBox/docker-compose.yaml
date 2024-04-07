@@ -112,8 +112,8 @@ services:
       plex-net:
         ipv4_address: 192.168.88.21
     environment:
-      - PUID=911
-      - PGID=911
+      - PUID=1000
+      - PGID=1000
       - TZ=Etc/UTC
       - VERSION=docker
       - PLEX_CLAIM=
