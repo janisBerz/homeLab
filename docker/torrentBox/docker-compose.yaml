@@ -74,8 +74,8 @@ services:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     environment:
-      - PUID=911
-      - PGID=911
+      - PUID=1000
+      - PGID=1000
       - TZ=Etc/UTC
     volumes:
       - ${DATA_ROOT}/sonarr/confgi:/config
@@ -138,16 +138,16 @@ services:
   #   ports:
   #     - 8081:8081
   #   restart: always
-  homer:
-    image: b4bz/homer
-    container_name: homer
-    volumes:
-      - ${DATA_ROOT}/homer/:/www/assets
-    ports:
-      - 8081:8080
-    user: 1000:1000
-    environment:
-      - INIT_ASSETS=1
+  # homer:
+  #   image: b4bz/homer
+  #   container_name: homer
+  #   volumes:
+  #     - ${DATA_ROOT}/homer/:/www/assets
+  #   ports:
+  #     - 8081:8080
+  #   user: 1000:1000
+  #   environment:
+  #     - INIT_ASSETS=1
 volumes:
   jackett-vol: null
   downloads-vol: null
