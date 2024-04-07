@@ -18,6 +18,12 @@
             state: present
           become: true
 
+        - name: Ensure python 3 is installed
+          yum:
+            name: python3
+            state: present
+          become: true
+
         - name: Ensure speedtest-cli is installed
           pip:
             name: speedtest-cli
