@@ -34,7 +34,7 @@
     - name: Change directory
       command:
         cmd: pwd
-        chdir: ../
+        chdir: 
       register: result
 
     - debug:
@@ -42,7 +42,7 @@
 
     - name: Copy Docker Compose file
       copy:
-        src: ../../docker/torrentBox/docker-compose.yml
+        src: "{{ playbook_dir }}/../../docker/torrentBox/docker-compose.yml"
         dest: /opt/stacks/torrentBox/docker-compose.yml
 
     - name: Run Docker Compose
