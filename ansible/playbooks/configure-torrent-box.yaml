@@ -20,6 +20,14 @@
     #     name: docker-compose
     #     state: present
 
+    - name: Display directory structure
+      command: ls -R
+      register: dir_structure
+
+    - name: Output directory structure
+      debug:
+        msg: "{{ dir_structure.stdout }}"
+
     - name: Copy Docker Compose file
       copy:
         src: /../../docker/torrentbox/docker-compose.yml
