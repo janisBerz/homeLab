@@ -49,11 +49,13 @@
         src: "{{ playbook_dir }}/../../docker/torrentBox/"
         dest: /opt/stacks/torrentBox/
 
-    - name: Update docker-compose.yaml file
+    - name: Update docker-compose.yaml file PUID
       replace:
         path: "/opt/stacks/torrentBox/docker-compose.yaml" # replace with your actual docker-compose file path
         regexp: 'PUID=1000'
         replace: 'PUID={{ uid.stdout }}'
+
+    - name: Update docker-compose.yaml file PGID
       replace:
         path: "/opt/stacks/torrentBox/docker-compose.yaml" # replace with your actual docker-compose file path
         regexp: 'PGID=1000'
