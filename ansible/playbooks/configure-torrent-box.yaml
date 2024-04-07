@@ -9,8 +9,8 @@
 
     - name: Copy Docker Compose file
       copy:
-        src: "{{ playbook_dir }}/../../docker/torrentBox"
-        dest: /opt/stacks/torrentBox
+        src: "{{ playbook_dir }}/../../docker/torrentBox/"
+        dest: /opt/stacks/torrentBox/
 
     - name: Run Docker Compose
       command: docker compose up -d
