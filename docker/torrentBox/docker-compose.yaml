@@ -65,27 +65,24 @@ services:
     ports:
       - 8989:8989
     restart: always
-  # radarr:
-  #   image: lscr.io/linuxserver/radarr:latest
-  #   container_name: radarr
-  #   environment:
-  #     - PUID=1000
-  #     - PGID=1000
-  #     - TZ=Etc/UTC
-  #   volumes:
-  #     - ${DATA_ROOT}/radarr/config:/config
-  #     - ${DATA_ROOT}/movies:/movies #optional
-  #     - ${DATA_ROOT}/downloads:/downloads
-  #   # networks:
-  #   #   - torrent-net
-  #   ports:
-  #     - 7878:7878
-  #   restart: always
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ${DATA_ROOT}/radarr/config:/config
+      - ${DATA_ROOT}/movies:/movies #optional
+      - ${DATA_ROOT}/downloads:/downloads
+    # networks:
+    #   - torrent-net
+    ports:
+      - 7878:7878
+    restart: always
   plex:
-    # platform: linux/amd64
-    # image: lscr.io/linuxserver/sonarr:arm64v8-latest
     image: lscr.io/linuxserver/plex:latest
-    # image: lscr.io/linuxserver/sonarr
     container_name: plex
     devices:
       - /dev/dri:/dev/dri
