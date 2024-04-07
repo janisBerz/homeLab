@@ -20,6 +20,9 @@
     #     name: docker-compose
     #     state: present
 
+    - name: Create file
+      command: touch tttttt
+
     - name: Display directory structure
       command: ls -R
       register: dir_structure
