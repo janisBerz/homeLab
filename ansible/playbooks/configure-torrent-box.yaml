@@ -1,0 +1,23 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Install pip
+      yum:
+        name: python-pip
+        state: present
+
+    - name: Install Docker Compose
+      pip:
+        name: docker-compose
+        state: present
+
+    - name: Copy Docker Compose file
+      copy:
+        src: /../../docker/torrentbox/docker-compose.yml
+        dest: /opt/stacks/torrentbox/docker-compose.yml
+
+    - name: Run Docker Compose
+      command: docker-compose up -d
+      args:
+        chdir: /opt/stacks/torrentbox/docker-compose.yml

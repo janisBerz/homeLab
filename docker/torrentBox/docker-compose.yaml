@@ -1,0 +1,147 @@
+services:
+  # nginx:
+  #   image: jc21/nginx-proxy-manager:latest
+  #   container_name: nginx
+  #   restart: always
+  #   networks:
+  #     - torrent-net
+  #     - nginx-net
+  #   ports:
+  #     - 80:80
+  #     - 81:81
+  #     - 443:443
+  #   volumes:
+  #     - nginx-vol:/data
+  #     - nginx-vol:/etc/letsencrypt
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - AUTO_UPDATE=true
+      - RUN_OPTS=
+    volumes:
+      - ${DATA_ROOT}/jackett/config:/config
+      - ${DATA_ROOT}/downloads:/downloads
+    networks:
+      - torrent-net
+    ports:
+      - 9117:9117
+    restart: always
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=911
+      - PGID=911
+      - TZ=Etc/UTC
+      - WEBUI_PORT=8080 #optional
+    volumes:
+      - ${DATA_ROOT}/qBittorrent/config:/config
+      - ${DATA_ROOT}/downloads:/downloads
+    networks:
+      - torrent-net
+    ports:
+      - 8080:8080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: always
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:3.0.8.1507-ls151
+    container_name: sonarr
+    environment:
+      - PUID=911
+      - PGID=911
+      - TZ=Etc/UTC
+    volumes:
+      - ${DATA_ROOT}/sonarr/confgi:/config
+      - ${DATA_ROOT}/tvseries:/tv
+      - ${DATA_ROOT}/downloads:/downloads
+    networks:
+      - torrent-net
+    ports:
+      - 8989:8989
+    restart: always
+  # radarr:
+  #   image: lscr.io/linuxserver/radarr:latest
+  #   container_name: radarr
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - TZ=Etc/UTC
+  #   volumes:
+  #     - ${DATA_ROOT}/radarr/config:/config
+  #     - ${DATA_ROOT}/movies:/movies #optional
+  #     - ${DATA_ROOT}/downloads:/downloads
+  #   # networks:
+  #   #   - torrent-net
+  #   ports:
+  #     - 7878:7878
+  #   restart: always
+  plex:
+    # platform: linux/amd64
+    # image: lscr.io/linuxserver/sonarr:arm64v8-latest
+    image: lscr.io/linuxserver/plex:latest
+    # image: lscr.io/linuxserver/sonarr
+    container_name: plex
+    devices:
+      - /dev/dri:/dev/dri
+    networks:
+      torrent-net: null
+      plex-net:
+        ipv4_address: 192.168.88.20
+    environment:
+      - PUID=911
+      - PGID=911
+      - TZ=Etc/UTC
+      - VERSION=docker
+      - PLEX_CLAIM=
+    volumes:
+      - ${DATA_ROOT}/plex/config:/config
+      - ${DATA_ROOT}/tvseries:/tv
+      - ${DATA_ROOT}/movies:/movies
+    restart: always
+  # sickchill:
+  #   image: lscr.io/linuxserver/sickchill:latest
+  #   container_name: sickchill
+  #   environment:
+  #     - PUID=0
+  #     - PGID=0
+  #     - TZ=Etc/UTC
+  #   volumes:
+  #     - ${DATA_ROOT}/sickchill/confgi:/config
+  #     - ${DATA_ROOT}/tvseries:/tv
+  #     - ${DATA_ROOT}/downloads:/downloads
+  #   networks:
+  #     - torrent-net
+  #   ports:
+  #     - 8081:8081
+  #   restart: always
+  homer:
+    image: b4bz/homer
+    container_name: homer
+    volumes:
+      - ${DATA_ROOT}/homer/:/www/assets
+    ports:
+      - 8081:8080
+    user: 1000:1000
+    environment:
+      - INIT_ASSETS=1
+volumes:
+  jackett-vol: null
+  downloads-vol: null
+  nginx-vol: null
+networks:
+  nginx-net: null
+  torrent-net: null
+  plex-net:
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.88.0/24
+          gateway: 192.168.88.1
