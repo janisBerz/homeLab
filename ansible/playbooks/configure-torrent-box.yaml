@@ -2,47 +2,9 @@
 - hosts: all
   become: true
   tasks:
-    # - name: Install epel-release
-    #   yum:
-    #     name: epel-release
-    #     state: present
-
-    # - name: Install pip
-    #   yum:
-    #     name: python-pip
-    #     state: present
-
-    # - name: Upgrade pip
-    #   command: pip install --upgrade pip
-
-    # - name: Install Docker Compose
-    #   pip:
-    #     name: docker-compose
-    #     state: present
-
-    - name: Create file
-      command: touch tttttt
-
-    - name: Display directory structure
-      command: ls -R
-      register: dir_structure
-
-    - name: Output directory structure
-      debug:
-        msg: "{{ dir_structure.stdout }}"
-
-    - name: Change directory
-      command:
-        cmd: pwd
-        chdir: 
-      register: result
-
-    - debug:
-        var: result.stdout
-
     - name: Copy Docker Compose file
       copy:
-        src: "{{ playbook_dir }}/../../docker/torrentBox/docker-compose.yml"
+        src: "{{ playbook_dir }}/../../../docker/torrentBox/docker-compose.yml"
         dest: /opt/stacks/torrentBox/docker-compose.yml
 
     - name: Run Docker Compose
