@@ -4,10 +4,10 @@
   tasks:
     - name: Copy Docker Compose file
       copy:
-        src: "{{ playbook_dir }}/../../../docker/torrentBox/docker-compose.yml"
-        dest: /opt/stacks/torrentBox/docker-compose.yml
+        src: "{{ playbook_dir }}/../../docker/torrentBox/docker-compose.yaml"
+        dest: /opt/stacks/torrentBox/docker-compose.yaml
 
     - name: Run Docker Compose
       command: docker compose up -d
       args:
-        chdir: /opt/stacks/torrentBox/docker-compose.yml
+        chdir: /opt/stacks/torrentBox/docker-compose.yaml
