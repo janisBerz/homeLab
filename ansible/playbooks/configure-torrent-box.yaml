@@ -2,6 +2,11 @@
 - hosts: all
   become: true
   tasks:
+    - name: Ensure destination directory exists
+      file:
+        path: /opt/stacks/torrentBox
+        state: directory
+
     - name: Copy Docker Compose file
       copy:
         src: "{{ playbook_dir }}/../../docker/torrentBox/docker-compose.yaml"
