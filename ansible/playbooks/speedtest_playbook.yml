@@ -22,10 +22,11 @@
           shell: curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.rpm.sh | sudo bash
           become: true
 
-        - name: Ensure speedtest-cli is installed
-          pip:
-            name: speedtest-cli
+        - name: Ensure Speedtest is installed
+          yum:
+            name: speedtest
             state: present
+          become: true
 
         - name: Run speedtest
           command: speedtest-cli --simple
