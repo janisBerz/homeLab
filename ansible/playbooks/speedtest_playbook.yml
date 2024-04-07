@@ -29,7 +29,7 @@
           become: true
 
         - name: Run speedtest
-          command: speedtest-cli --simple
+          command: speedtest --accept-gdpr
           register: speedtest_output
 
         - name: Log speedtest results
