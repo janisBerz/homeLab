@@ -91,7 +91,7 @@ services:
     networks:
       torrent-net: null
       plex-net:
-        ipv4_address: 192.168.88.20
+        ipv4_address: 192.168.88.21
     environment:
       - PUID=911
       - PGID=911

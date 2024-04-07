@@ -33,7 +33,7 @@
 
     - name: Copy Docker Compose file
       copy:
-        src: docker/torrentbox/docker-compose.yml
+        src: ../../docker/torrentBox/docker-compose.yml
         dest: /opt/stacks/torrentbox/docker-compose.yml
 
     - name: Run Docker Compose
