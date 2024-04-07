@@ -139,7 +139,7 @@ networks:
   plex-net:
     driver: macvlan
     driver_opts:
-      parent: eth0
+      parent: eth0.10
     ipam:
       driver: default
       config:
