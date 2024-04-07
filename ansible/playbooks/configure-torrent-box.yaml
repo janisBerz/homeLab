@@ -6,11 +6,14 @@
       yum:
         name: epel-release
         state: present
-  
+
     - name: Install pip
       yum:
         name: python-pip
         state: present
+
+    - name: Upgrade pip
+      command: pip install --upgrade pip
 
     - name: Install Docker Compose
       pip:
@@ -23,6 +26,6 @@
         dest: /opt/stacks/torrentbox/docker-compose.yml
 
     - name: Run Docker Compose
-      command: docker-compose up -d
+      command: docker compose up -d
       args:
         chdir: /opt/stacks/torrentbox/docker-compose.yml
