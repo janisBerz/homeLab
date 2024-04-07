@@ -32,8 +32,6 @@
           command: speedtest --accept-gdpr
           register: speedtest_output
 
-        - name: Log speedtest results
-          copy:
-            content: "{{ speedtest_output.stdout }}"
-            dest: "/var/log/speedtest.log"
-          become: true
+        - name: Display speedtest results
+          debug:
+            msg: "{{ speedtest_output.stdout }}"
