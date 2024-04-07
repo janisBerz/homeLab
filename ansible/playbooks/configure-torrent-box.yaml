@@ -15,4 +15,4 @@
     - name: Run Docker Compose
       command: docker compose up -d
       args:
-        chdir: /opt/stacks/torrentBox/docker-compose.yaml
+        chdir: /opt/stacks/torrentBox
