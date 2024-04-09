@@ -1,7 +1,7 @@
 {
     acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
 }
-budget.example.org {
+actualdbudget.home ,budget.example.org {
     encode gzip zstd
     reverse_proxy actual_server:5006
 }
