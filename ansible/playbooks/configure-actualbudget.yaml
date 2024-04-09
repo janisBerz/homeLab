@@ -1,0 +1,67 @@
+---
+- hosts: all
+  become: true
+  vars:
+    username: actualbudget
+    data_root: /mnt/media/{{ username }} # replace with your actual data root path
+  tasks:
+    - name: Create a new user
+      user:
+        name: "{{ username }}"
+        state: present
+
+    - name: Get user id
+      command: id -u "{{ username }}"
+      register: uid
+      changed_when: false
+
+    - name: Get group id
+      command: id -g "{{ username }}"
+      register: gid
+      changed_when: false
+
+    - name: Set user and group ownership for downloads directory
+      file:
+        path: "{{ data_root }}"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        recurse: yes
+    - name: Set directory permissions
+      file:
+        path: "{{ data_root }}"
+        state: directory
+        mode: '0755'
+        recurse: yes
+
+    - name: Ensure destination directory exists
+      file:
+        path: /opt/stacks/{{ username }}
+        state: directory
+
+    - name: Ensure {{ username }} directory exists
+      file:
+        path: /mnt/media/{{ username }}
+        state: directory
+
+    - name: Copy Docker Compose file
+      copy:
+        src: "{{ playbook_dir }}/../../docker/{{ username }}/"
+        dest: /opt/stacks/{{ username }}/
+
+    - name: Update docker-compose.yaml file PUID
+      replace:
+        path: "/opt/stacks/{{ username }}/docker-compose.yaml" # replace with your actual docker-compose file path
+        regexp: 'PUID=1000'
+        replace: 'PUID={{ uid.stdout }}'
+
+    - name: Update docker-compose.yaml file PGID
+      replace:
+        path: "/opt/stacks/{{ username }}/docker-compose.yaml" # replace with your actual docker-compose file path
+        regexp: 'PGID=1000'
+        replace: 'PGID={{ gid.stdout }}'
+
+    - name: Run Docker Compose
+      command: docker compose up -d
+      args:
+        chdir: /opt/stacks/{{ username }}
