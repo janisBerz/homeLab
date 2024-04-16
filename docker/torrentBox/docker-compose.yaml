@@ -65,6 +65,8 @@ services:
       - ${DATA_ROOT}/transmission/config:/config
       - ${DATA_ROOT}/downloads:/downloads
       - ${DATA_ROOT}/transmission/watch:/watch
+    networks:
+      - torrent-net
     ports:
       - 9091:9091
       - 51413:51413
