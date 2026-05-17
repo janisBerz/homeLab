@@ -1,0 +1,4 @@
+---
+- import_playbook: 01-node-prereqs.yaml
+- import_playbook: 02-containerd-k8s-tools.yaml
+- import_playbook: 03-kubelet-node-ip.yaml
