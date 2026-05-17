@@ -1,0 +1,55 @@
+---
+- name: Ensure kubelet advertises the correct node IP
+  hosts: k8s_nodes
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Check kubelet kubeadm flags file exists
+      ansible.builtin.stat:
+        path: /var/lib/kubelet/kubeadm-flags.env
+      register: kubeadm_flags_file
+
+    - name: Fail if kubelet kubeadm flags file is missing
+      ansible.builtin.fail:
+        msg: "/var/lib/kubelet/kubeadm-flags.env is missing. This node may not have joined the cluster yet."
+      when: not kubeadm_flags_file.stat.exists
+
+    - name: Read current kubelet kubeadm flags
+      ansible.builtin.slurp:
+        path: /var/lib/kubelet/kubeadm-flags.env
+      register: kubeadm_flags_raw
+
+    - name: Decode current kubelet kubeadm flags
+      ansible.builtin.set_fact:
+        kubeadm_flags_content: "{{ kubeadm_flags_raw.content | b64decode }}"
+
+    - name: Replace existing kubelet node IP if present
+      ansible.builtin.replace:
+        path: /var/lib/kubelet/kubeadm-flags.env
+        regexp: '--node-ip=[^ "]+'
+        replace: '--node-ip={{ node_ip }}'
+      when: "'--node-ip=' in kubeadm_flags_content"
+      notify: Restart kubelet
+
+    - name: Add kubelet node IP when args are empty
+      ansible.builtin.replace:
+        path: /var/lib/kubelet/kubeadm-flags.env
+        regexp: '^KUBELET_KUBEADM_ARGS=""$'
+        replace: 'KUBELET_KUBEADM_ARGS="--node-ip={{ node_ip }}"'
+      when: "'--node-ip=' not in kubeadm_flags_content"
+      notify: Restart kubelet
+
+    - name: Add kubelet node IP when args are not empty
+      ansible.builtin.replace:
+        path: /var/lib/kubelet/kubeadm-flags.env
+        regexp: '^(KUBELET_KUBEADM_ARGS=".+)"$'
+        replace: '\1 --node-ip={{ node_ip }}"'
+      when: "'--node-ip=' not in kubeadm_flags_content"
+      notify: Restart kubelet
+
+  handlers:
+    - name: Restart kubelet
+      ansible.builtin.systemd_service:
+        name: kubelet
+        state: restarted
