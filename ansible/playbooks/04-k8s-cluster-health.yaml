@@ -3,35 +3,56 @@
   hosts: localhost
   connection: local
   gather_facts: false
+  become: false
+
+  vars:
+    kubeconfig_path: "{{ lookup('env', 'HOME') }}/.kube/homelab-config"
+
+  environment:
+    KUBECONFIG: "{{ kubeconfig_path }}"
 
   tasks:
+    - name: Check kubeconfig file exists
+      ansible.builtin.stat:
+        path: "{{ kubeconfig_path }}"
+      register: kubeconfig_file
+
+    - name: Fail if kubeconfig file is missing
+      ansible.builtin.fail:
+        msg: "Kubeconfig not found at {{ kubeconfig_path }}"
+      when: not kubeconfig_file.stat.exists
+
+    - name: Check Kubernetes API health endpoint
+      ansible.builtin.command: curl -k --connect-timeout 5 https://192.168.1.20:6443/livez
+      changed_when: false
+
     - name: Check kubectl can reach the cluster
-      ansible.builtin.command: kubectl get nodes -o wide
+      ansible.builtin.command: kubectl --request-timeout=10s get nodes -o wide
       changed_when: false
 
     - name: Check all pods across all namespaces
-      ansible.builtin.command: kubectl get pods -A -o wide
+      ansible.builtin.command: kubectl --request-timeout=10s get pods -A -o wide
       changed_when: false
 
     - name: Check Kubernetes services
-      ansible.builtin.command: kubectl get svc -A
+      ansible.builtin.command: kubectl --request-timeout=10s get svc -A
       changed_when: false
 
     - name: Check ingress resources
-      ansible.builtin.command: kubectl get ingress -A
+      ansible.builtin.command: kubectl --request-timeout=10s get ingress -A
       changed_when: false
       failed_when: false
 
     - name: Check Cilium pods
-      ansible.builtin.command: kubectl get pods -n kube-system -l k8s-app=cilium -o wide
+      ansible.builtin.command: kubectl --request-timeout=10s get pods -n kube-system -l k8s-app=cilium -o wide
       changed_when: false
 
     - name: Check MetalLB pods
-      ansible.builtin.command: kubectl get pods -n metallb-system -o wide
+      ansible.builtin.command: kubectl --request-timeout=10s get pods -n metallb-system -o wide
       changed_when: false
       failed_when: false
 
     - name: Check NGINX Ingress pods
-      ansible.builtin.command: kubectl get pods -n ingress-nginx -o wide
+      ansible.builtin.command: kubectl --request-timeout=10s get pods -n ingress-nginx -o wide
       changed_when: false
       failed_when: false
