@@ -13,7 +13,7 @@ spec:
         valueFiles:
           - $values/helm/longhorn/values.yaml
     - repoURL: https://github.com/janisBerz/homeLab.git
-      targetRevision: init-commit-2
+      targetRevision: task/init-commit-2
       ref: values
   destination:
     server: https://kubernetes.default.svc
