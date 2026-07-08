@@ -1,0 +1,24 @@
+adminUser: admin
+adminPassword: change-me-later
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  hosts:
+    - grafana.k8s.home.arpa
+  path: /
+  pathType: Prefix
+
+persistence:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

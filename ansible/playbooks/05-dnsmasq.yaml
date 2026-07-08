@@ -1,0 +1,68 @@
+---
+- name: Configure local DNS for Kubernetes homelab
+  hosts: dns_servers
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Install dnsmasq and DNS tools
+      ansible.builtin.apt:
+        name:
+          - dnsmasq
+          - dnsutils
+        state: present
+        update_cache: true
+
+    - name: Ensure dnsmasq custom config directory exists
+      ansible.builtin.file:
+        path: /etc/dnsmasq.d
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Configure dnsmasq for Kubernetes homelab wildcard DNS
+      ansible.builtin.copy:
+        dest: /etc/dnsmasq.d/k8s-homelab.conf
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          # Kubernetes homelab local DNS
+          # Anything under {{ homelab_dns_domain }} resolves to the NGINX Ingress IP.
+          address=/{{ homelab_dns_domain }}/{{ homelab_ingress_ip }}
+
+          # Listen locally and on the node LAN IP.
+          listen-address=127.0.0.1,{{ homelab_dns_server }}
+
+          # Bind only to configured interfaces/IPs.
+          bind-interfaces
+
+          # Do not forward plain names without dots.
+          domain-needed
+
+          # Do not forward reverse lookups for private IP ranges.
+          bogus-priv
+      notify: Restart dnsmasq
+
+    - name: Ensure dnsmasq is enabled and running
+      ansible.builtin.systemd_service:
+        name: dnsmasq
+        enabled: true
+        state: started
+
+    - name: Test local dnsmasq resolution on DNS server
+      ansible.builtin.command: dig +short grafana.{{ homelab_dns_domain }} @127.0.0.1
+      register: dns_test_local
+      changed_when: false
+      failed_when: dns_test_local.stdout.strip() != homelab_ingress_ip
+
+    - name: Show DNS test result
+      ansible.builtin.debug:
+        msg: "grafana.{{ homelab_dns_domain }} resolves to {{ dns_test_local.stdout.strip() }}"
+
+  handlers:
+    - name: Restart dnsmasq
+      ansible.builtin.systemd_service:
+        name: dnsmasq
+        state: restarted

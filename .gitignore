@@ -1,0 +1,29 @@
+# SSH / keys
+*.pem
+*.key
+id_*
+*_ed25519
+*_rsa
+
+# Kubernetes credentials
+kubeconfig
+admin.conf
+*.kubeconfig
+.kube/
+
+# Ansible secrets
+.vault-password
+vault-password.txt
+secrets.yml
+group_vars/*/vault.yml
+host_vars/*/vault.yml
+
+# Runtime files
+*.retry
+__pycache__/
+.cache/
+
+# Editor files
+.vscode/
+.idea/
+*.swp
