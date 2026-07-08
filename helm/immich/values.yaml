@@ -1,0 +1,71 @@
+image:
+  tag: v3.0.0
+
+controllers:
+  main:
+    containers:
+      main:
+        env:
+          DB_HOSTNAME: immich-postgres-rw
+          DB_DATABASE_NAME: immich
+          DB_USERNAME: immich
+          DB_PASSWORD:
+            valueFrom:
+              secretKeyRef:
+                name: immich-db-user
+                key: password
+
+immich:
+  persistence:
+    library:
+      existingClaim: immich-library
+
+valkey:
+  enabled: true
+  persistence:
+    data:
+      enabled: true
+      type: persistentVolumeClaim
+      size: 1Gi
+      accessMode: ReadWriteOnce
+      storageClass: longhorn
+
+server:
+  ingress:
+    main:
+      enabled: true
+      className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      hosts:
+        - host: immich.192-168-1-50.sslip.io
+          paths:
+            - path: /
+              pathType: Prefix
+              service:
+                identifier: main
+
+        - host: photos.192-168-1-50.sslip.io
+          paths:
+            - path: /
+              pathType: Prefix
+              service:
+                identifier: main
+
+        - host: immich.homelab.local
+          paths:
+            - path: /
+              pathType: Prefix
+              service:
+                identifier: main
+      tls: []
+
+machine-learning:
+  enabled: true
+  persistence:
+    cache:
+      enabled: true
+      type: persistentVolumeClaim
+      size: 10Gi
+      accessMode: ReadWriteOnce
+      storageClass: longhorn

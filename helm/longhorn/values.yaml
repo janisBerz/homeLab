@@ -6,5 +6,5 @@ defaultSettings:
 
 persistence:
   defaultClass: true
-  defaultClassReplicaCount: 3
+  defaultClassReplicaCount: 2
   reclaimPolicy: Retain
