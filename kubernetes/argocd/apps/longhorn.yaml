@@ -12,7 +12,7 @@ spec:
       helm:
         valueFiles:
           - $values/helm/longhorn/values.yaml
-    - repoURL: git@github.com:janisBerz/homeLab.git
+    - repoURL: https://github.com/janisBerz/homeLab.git
       targetRevision: init-commit-2
       ref: values
   destination:
