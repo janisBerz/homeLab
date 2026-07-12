@@ -1,0 +1,36 @@
+---
+- name: Ensure k8s cluster has Longhorn dependencies
+  hosts: k8s_nodes
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Install Longhorn dependencies
+      ansible.builtin.apt:
+        name:
+          - open-iscsi
+          - nfs-common
+          - cryptsetup
+          - dmsetup
+        state: present
+        update_cache: true
+
+    - name: Ensure iscsid is enabled and running
+      ansible.builtin.systemd_service:
+        name: iscsid
+        enabled: true
+        state: started
+
+    - name: Load iscsi_tcp kernel module
+      community.general.modprobe:
+        name: iscsi_tcp
+        state: present
+
+    - name: Persist iscsi_tcp module after reboot
+      ansible.builtin.copy:
+        dest: /etc/modules-load.d/longhorn.conf
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          iscsi_tcp
