@@ -2,6 +2,15 @@
 ansible/inventory/hosts.ini
 ansible/inventory/*.local.ini
 
+.vault-password
+vault-password.txt
+*.vault-pass
+
+# SSH/private keys
+*.pem
+*.key
+id_*
+
 # SSH / keys
 *.pem
 *.key
