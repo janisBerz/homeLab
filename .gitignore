@@ -1,3 +1,7 @@
+# User
+ansible/inventory/hosts.ini
+ansible/inventory/*.local.ini
+
 # SSH / keys
 *.pem
 *.key
