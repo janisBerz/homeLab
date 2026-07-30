@@ -12,4 +12,8 @@ persistence:
 ingress:
   enabled: true
   ingressClassName: nginx
-  host: longhorn.k8s.home.arpa
+  host: longhorn.janisberzins.xyz
+  tls: true
+  tlsSecret: longhorn-tls
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
