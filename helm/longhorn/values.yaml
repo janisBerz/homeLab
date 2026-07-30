@@ -1,10 +1,15 @@
 defaultSettings:
-  defaultDataPath: /var/lib/longhorn
-  replicaSoftAntiAffinity: false
+  createDefaultDiskLabeledNodes: true
+  defaultReplicaCount: 2
+  replicaSoftAntiAffinity: true
   storageOverProvisioningPercentage: 100
-  storageMinimalAvailablePercentage: 15
+  storageMinimalAvailablePercentage: 10
 
 persistence:
   defaultClass: true
   defaultClassReplicaCount: 2
-  reclaimPolicy: Retain
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  host: longhorn.k8s.home.arpa

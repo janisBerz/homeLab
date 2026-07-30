@@ -1,0 +1,11 @@
+---
+- import_playbook: 00-audit-nodes.yml
+- import_playbook: 01-node-prereqs.yml
+- import_playbook: 02-containerd-k8s-tools.yml
+- import_playbook: 03-kubelet-node-ip.yml
+- import_playbook: 04-kube-health.yml
+- import_playbook: 05-dnsmasq.yml
+- import_playbook: 06-longhorn-prereqs.yml
+- import_playbook: 06-longhorn-node-labels.yml
+- import_playbook: baseline.yml
+  

@@ -1,0 +1,68 @@
+nextcloud:
+  host: nextcloud.k8s.home.arpa
+  username: admin
+  password: change-me-later
+  configs:
+    reverse-proxy.config.php: |-
+      <?php
+      $CONFIG = array (
+        'trusted_domains' =>
+        array (
+          0 => 'nextcloud.k8s.home.arpa',
+          1 => 'nextcloud.yourdomain.com',
+        ),
+        'trusted_proxies' =>
+        array (
+          0 => '10.0.0.0/8',
+          1 => '192.168.1.0/24',
+        ),
+        'overwriteprotocol' => 'https',
+        'overwritehost' => 'nextcloud.yourdomain.com',
+      );
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "10G"
+  tls: []
+  hosts:
+    - host: nextcloud.k8s.home.arpa
+      paths:
+        - path: /
+          pathType: Prefix
+
+persistence:
+  enabled: true
+  storageClass: longhorn
+  size: 50Gi
+
+mariadb:
+  enabled: true
+  auth:
+    rootPassword: change-me-root-password
+    database: nextcloud
+    username: nextcloud
+    password: change-me-db-password
+  primary:
+    persistence:
+      enabled: true
+      storageClass: longhorn
+      size: 10Gi
+
+redis:
+  enabled: true
+  auth:
+    enabled: true
+    password: change-me-redis-password
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: 1500m
+    memory: 2Gi

@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pihole
+  namespace: pihole
+  labels:
+    app: pihole
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: pihole
+  template:
+    metadata:
+      labels:
+        app: pihole
+    spec:
+      nodeSelector:
+        pihole-dns: "true"
+      containers:
+        - name: pihole
+          image: pihole/pihole:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "50m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - name: dns-tcp
+              containerPort: 53
+              protocol: TCP
+            - name: dns-udp
+              containerPort: 53
+              protocol: UDP
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          env:
+            - name: TZ
+              value: Europe/Riga
+            - name: WEBPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pihole-admin
+                  key: WEBPASSWORD
+            - name: PIHOLE_DNS_
+              value: "80.232.230.242;195.122.12.242;1.1.1.1"
+            - name: FTLCONF_dns_listeningMode
+              value: "all"
+          volumeMounts:
+            - name: pihole-config
+              mountPath: /etc/pihole
+      volumes:
+        - name: pihole-config
+          persistentVolumeClaim:
+            claimName: pihole-config
