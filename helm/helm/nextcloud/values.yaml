@@ -38,7 +38,7 @@ ingress:
 persistence:
   enabled: true
   storageClass: longhorn
-  size: 50Gi
+  size: 10Gi
 
 mariadb:
   enabled: true
